@@ -1,0 +1,11 @@
+.list-item {
+    display: inline-block;
+    padding: 10px;
+    margin-bottom: 20px;
+    cursor: pointer;
+}
+
+.list-item:hover, .list-item:focus {
+    background: lightgray;
+    outline: none;
+}

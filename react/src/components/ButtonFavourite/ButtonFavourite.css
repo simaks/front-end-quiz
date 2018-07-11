@@ -1,0 +1,13 @@
+.btn-favourite {
+    background: none;
+    border: none;
+    color: goldenrod;
+    transition-duration: 0.25s;
+    transition-property: text-shadow;
+    cursor: pointer;
+}
+
+.btn-favourite:hover, .btn-favourite:focus {
+    text-shadow: 0 0 5px goldenrod;
+    outline: none;
+}
