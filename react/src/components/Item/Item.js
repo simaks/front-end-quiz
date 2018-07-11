@@ -11,6 +11,7 @@ class Item extends Component {
 
   componentDidMount() {
     this.props.fetchItem(this.props.itemId);
+    this.props.fetchFavourites();
   }
 
   render() {
@@ -29,7 +30,7 @@ class Item extends Component {
         <div className='row'>
           <div className='col'>
             <div className='text-right'>
-              <ButtonFavourite favourite={item.favourite} onClick={this.onToggleFavourite(item.id)} />
+              <ButtonFavourite favourite={this.itemFavourite} onClick={this.onToggleFavourite(item.id, !this.itemFavourite)} />
             </div>
             <img src={item.image} alt={item.title} />
           </div>
@@ -61,14 +62,18 @@ class Item extends Component {
     </div>;
   }
 
-  onToggleFavourite(id) {
+  onToggleFavourite(id, value) {
     return () => {
-      return this.props.toggleFavourite(id)
+      return this.props.toggleFavourite(id, value)
     };
   }
 
   onHomeClick() {
     this.props.navigateToHome();
+  }
+
+  get itemFavourite() {
+    return this.props.favourites.indexOf(this.props.item.id) !== -1;
   }
 
   get itemPrice() {
@@ -85,11 +90,13 @@ export default connect((state) => {
     item: state.item.item,
     fetched: state.item.fetched,
     fetching: state.item.fetching,
+    favourites: state.favourites.favourites,
   }
 }, (dispatch) => {
   return {
     fetchItem: id => dispatch(ItemActions.fetchItem(id)),
-    toggleFavourite: id => dispatch(ItemActions.toggleFavourite(id)),
-    navigateToHome: () => dispatch(ItemActions.navigateToHome())
+    toggleFavourite: (id, value) => dispatch(ItemActions.toggleFavourite(id, value)),
+    navigateToHome: () => dispatch(ItemActions.navigateToHome()),
+    fetchFavourites: () => dispatch(ItemActions.fetchFavourites()),
   }
 })(Item);

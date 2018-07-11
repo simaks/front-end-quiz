@@ -13,6 +13,7 @@ class Browse extends Component {
     if (this.props.loadedPage < 0) {
       this.props.fetchItemsPage();
     }
+    this.props.fetchFavourites();
   }
 
   render() {
@@ -21,7 +22,10 @@ class Browse extends Component {
       {this.props.fetched ? <div>
         <div className="row text-center">
           {this.props.items.map((item) => <div className="col" key={item.id}>
-            <ListItem item={item} onItemClick={this.onItemClick(item.id)} onToggleFavourite={this.onToggleFavourite(item.id)} />
+            <ListItem item={item}
+              favourite={this.props.favourites.indexOf(item.id) !== -1}
+              onItemClick={this.onItemClick(item.id)}
+              onToggleFavourite={this.onToggleFavourite(item.id, this.props.favourites.indexOf(item.id) === -1)} />
           </div>)}
         </div>
         {this.showLoadMore ? <div className='text-center my-4'>
@@ -45,10 +49,10 @@ class Browse extends Component {
     }
   }
 
-  onToggleFavourite(id) {
+  onToggleFavourite(id, value) {
     return (event) => {
       event.stopPropagation();
-      return this.props.toggleFavourite(id)
+      return this.props.toggleFavourite(id, value)
     };
   }
 }
@@ -60,11 +64,13 @@ export default connect((state) => {
     fetched: state.items.fetched,
     fetching: state.items.fetching,
     loadedPage: state.items.loadedPage,
+    favourites: state.favourites.favourites,
   }
 }, (dispatch) => {
   return {
     fetchItemsPage: page => dispatch(ItemActions.fetchItemsPage(page)),
-    toggleFavourite: id => dispatch(ItemActions.toggleFavourite(id)),
+    fetchFavourites: () => dispatch(ItemActions.fetchFavourites()),
+    toggleFavourite: (id, value) => dispatch(ItemActions.toggleFavourite(id, value)),
     navigateToItem: id => dispatch(ItemActions.navigateToItem(id))
   }
 })(Browse);

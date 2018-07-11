@@ -9,6 +9,9 @@ export const
     FETCH_ITEM = 'FETCH_ITEM',
     FETCH_ITEM_RESPONSE = 'FETCH_ITEM_RESPONSE',
     FETCH_ITEM_ERROR = 'FETCH_ITEM_ERROR',
+    FETCH_FAVOURITES = 'FETCH_FAVOURITES',
+    FETCH_FAVOURITES_RESPONSE = 'FETCH_FAVOURITES_RESPONSE',
+    FETCH_FAVOURITES_ERROR = 'FETCH_FAVOURITES_ERROR',
     TOGGLE_ITEM_FAVOURITE = 'TOGGLE_ITEM_FAVOURITE',
     NAVIGATE_TO_ITEM = 'NAVIGATE_TO_ITEM';
 
@@ -34,10 +37,13 @@ export function fetchItemsPage(page = 0) {
     }
 }
 
-export function toggleFavourite(id) {
-    return {
-        payload: id,
-        type: TOGGLE_ITEM_FAVOURITE,
+export function toggleFavourite(id, value) {
+    return (dispatch) => {
+        fetch(`${serverUrl}/favourites/set/${id}/${value}`, {method: 'post'}).then((response) => {
+            return response.json();
+        }).then((favourites) => {
+            dispatch(fetchFavourites());
+        })
     }
 }
 
@@ -67,6 +73,25 @@ export function fetchItem(id) {
             dispatch({
                 payload: error,
                 type: FETCH_ITEM_ERROR,
+            })
+        })
+    }
+}
+
+export function fetchFavourites() {
+    return (dispatch) => {
+        dispatch({ type: FETCH_FAVOURITES });
+        fetch(`${serverUrl}/favourites`).then((response) => {
+            return response.json();
+        }).then((favourites) => {
+            dispatch({
+                payload: favourites,
+                type: FETCH_FAVOURITES_RESPONSE,
+            })
+        }).catch((error) => {
+            dispatch({
+                payload: error,
+                type: FETCH_FAVOURITES_ERROR,
             })
         })
     }

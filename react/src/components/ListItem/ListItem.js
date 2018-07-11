@@ -12,7 +12,7 @@ class ListItem extends Component {
         <div className='row'>
           <div className='col text-left'>{this.itemPrice}</div>
           <div className='col text-right'>
-            <ButtonFavourite favourite={item.favourite} onClick={this.props.onToggleFavourite} />
+            <ButtonFavourite favourite={this.props.favourite} onClick={this.props.onToggleFavourite} />
           </div>
         </div>
       </div>
